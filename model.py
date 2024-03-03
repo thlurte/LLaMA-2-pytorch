@@ -31,3 +31,40 @@ class ModelArgs:
 
 
 # ------------------------------------------------- #
+
+
+# ----------------   Transformer   ---------------- #
+    
+class Transformer(nn.Module):
+
+    def __init__(self, args:ModelArgs) -> None:
+        super().__init__()
+
+        ## Verify that vocabulary size is set
+        assert args.vocab_size!=-1, "Vocabulary size must be set"
+
+        self.args=args
+        self.vocab_size=args.vocab_size
+        self.n_layers=args.n_layers
+        self.tok_embeddings=nn.Embedding(self.vocab_size,args.dim)
+
+        self.layers=nn.ModuleList()
+
+        for _ in range(args.n_layers):
+            self.layers.append(EncoderBlock(args))
+
+        self.norm=RMSNorm(args.dim,eps=args.norm_eps)
+
+        self.output=nn.Linear(args.dim,self.vocab_size,bias=False)
+
+        self.freqs_complex=precompute_theta_pos_frequencies(self.args.dim // self.args.n_heads, self.args.max_seq_len*2,device=self.args.device)
+
+    def forward(self,tokens:torch.Tensor, start_pos:int):
+        # (B, Seq_Len)
+        batch_size,seq_len=tokens.shape
+        assert seq_len==1, "One token to process at a time"
+
+        
+
+
+# ------------------------------------------------- #
