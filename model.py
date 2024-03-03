@@ -29,7 +29,6 @@ class ModelArgs:
     max_seq_len:int=2048 
     device:str=None
 
-
 # ------------------------------------------------- #
 
 
@@ -60,11 +59,23 @@ class Transformer(nn.Module):
         self.freqs_complex=precompute_theta_pos_frequencies(self.args.dim // self.args.n_heads, self.args.max_seq_len*2,device=self.args.device)
 
     def forward(self,tokens:torch.Tensor, start_pos:int):
-        # (B, Seq_Len)
+        # (B, seq_len)
         batch_size,seq_len=tokens.shape
         assert seq_len==1, "One token to process at a time"
 
-        
+        # (B, seq_len) --> (B, seq_len, dim)
+        h=self.tok_embeddings(tokens)
 
+        # Retrieve the pairs (m,theta) corresponding to the positions [start_pos, start_pos+seq_len]
+        freq_complex=self.freqs_complex[start_pos:start_pos+seq_len]
+
+        # Apply encoder layers consectuively
+        for layer in self.layers:
+            h=layer(h,start_pos,freq_complex)
+
+        h=self.norm(h)
+        output=self.output(h).float()
+
+        return output
 
 # ------------------------------------------------- #
