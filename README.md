@@ -33,7 +33,7 @@ Instead of directly adding a positional embedding vector to the word embedding, 
 Based on the paper:
 
 <p align="center">
-  <img src="/assets/b.png" alt="Eq">
+  <img src="/assets/a.png" alt="Eq">
 </p>
 
 
