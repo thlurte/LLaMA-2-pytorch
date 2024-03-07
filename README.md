@@ -50,14 +50,23 @@ where :
 A slight different way to put this would be, We perform outer product on `m` and $\Theta$  and get a matrix that looks like this 
 
 $$
-\Theta \otimes \mathbf{m} = \begin{pmatrix} \theta_1 \cdot m_1 & \theta_1 \cdot m_2 & \cdots & \theta_1 \cdot m_{seq\_len} \\ \theta_2 \cdot m_1 & \theta_2 \cdot m_2 & \cdots & \theta_2 \cdot m_{seq\_len} \\ \vdots & \vdots & \ddots & \vdots \\ \theta_{d/2} \cdot m_1 & \theta_{d/2} \cdot m_2 & \cdots & \theta_{d/2} \cdot m_{seq\_len} \end{pmatrix}
+\Theta \otimes \mathbf{m} = 
+\begin{pmatrix} \theta_1 \cdot m_1 & \theta_1 \cdot m_2 & \cdots & \theta_1 \cdot m_{seq\_len} \\ 
+\theta_2 \cdot m_1 & \theta_2 \cdot m_2 & \cdots & \theta_2 \cdot m_{seq\_len} \\ 
+\vdots & \vdots & \ddots & \vdots \\ 
+\theta_{d/2} \cdot m_1 & \theta_{d/2} \cdot m_2 & \cdots & \theta_{d/2} \cdot m_{seq\_len} 
+\end{pmatrix}
 $$
 
 Then we convert this matrix into complex form
 
 $$
 \Theta \otimes \mathbf{m} = 
-\begin{pmatrix} \cos( m_1 \theta_1 ) + i \sin( m_1 \theta_1 ) & \cos (m_2 \theta_1 ) + i \sin( m_2 \theta_1 ) & \cdots & \cos( m_{seq\_len} \theta_1 ) + i \sin( m_{seq\_len} \theta_1 ) \\ \cos( m_1 \theta_2 ) + i \sin( m_1 \theta_2 ) & \cos( m_2 \theta_2 ) + i \sin( m_2 \theta_2 ) & \cdots & \cos( m_{seq\_len} \theta_2 ) + i \sin( m_{seq\_len} \theta_2 ) \\ \vdots & \vdots & \ddots & \vdots \\ \cos( m_1 \theta_{d/2}) + i \sin( m_1 \theta_{d/2} ) & \cos( m_2 \theta_{d/2} ) + i \sin( m_2 \theta_{d/2} ) & \cdots & \cos( m_{seq\_len} \theta_{d/2} ) + i \sin( m_{seq\_len} \theta_{d/2} ) 
+\begin{pmatrix} 
+\cos( m_1 \theta_1 ) + i \sin( m_1 \theta_1 ) & \cos (m_2 \theta_1 ) + i \sin( m_2 \theta_1 ) & \cdots & \cos( m_{seq\_len} \theta_1 ) + i \sin( m_{seq\_len} \theta_1 ) \\ 
+\cos( m_1 \theta_2 ) + i \sin( m_1 \theta_2 ) & \cos( m_2 \theta_2 ) + i \sin( m_2 \theta_2 ) & \cdots & \cos( m_{seq\_len} \theta_2 ) + i \sin( m_{seq\_len} \theta_2 ) \\
+\vdots & \vdots & \ddots & \vdots \\
+\cos( m_1 \theta_{d/2}) + i \sin( m_1 \theta_{d/2} ) & \cos( m_2 \theta_{d/2} ) + i \sin( m_2 \theta_{d/2} ) & \cdots & \cos( m_{seq\_len} \theta_{d/2} ) + i \sin( m_{seq\_len} \theta_{d/2} ) 
 \end{pmatrix}
 $$
 
@@ -67,7 +76,10 @@ To illustrate how this operation works, we will consider a simple embedding vect
 
 $$
 \begin{bmatrix}
-x_1 \\ x_2 \\ x_3 \\ x_4
+x_1 \\ 
+x_2 \\ 
+x_3 \\ 
+x_4
 \end{bmatrix}
 $$
 
@@ -75,7 +87,8 @@ We reshape this vector by grouping two successive tokens.
 
 $$
 \begin{bmatrix}
-[x_1 & x_2] \\  [x_3 & x_4] \\ 
+[x_1 & x_2] \\
+[x_3 & x_4] 
 \end{bmatrix}
 $$
 
@@ -111,15 +124,17 @@ Once computed, now we can split the real and imaginary part and flatten them to 
 
 $$
 \begin{bmatrix}
-x_1\cos(m_1\theta_1) - x_2\sin(m_1\theta_1) &x_1\sin(m_1\theta_1)+x_2\cos(m_1\theta_1)\\
-x_3\cos(m_1\theta_2) - x_4\sin(m_1\theta_2)&x_3\sin(m_1\theta_2)+x_4\cos(m_1\theta_2) \\
+x_1 \cos( m_1 \theta_1 ) - x_2 \sin( m_1 \theta_1 ) & x_1 \sin( m_1 \theta_1 ) + x_2 \cos( m_1 \theta_1 ) \\
+x_3 \cos( m_1 \theta_2 ) - x_4 \sin( m_1 \theta_2 ) & x_3 \sin( m_1 \theta_2 ) + x_4 \cos( m_1 \theta_2 ) \\
 \end{bmatrix}
 $$
 
 $$
 \begin{bmatrix}
-x_1 \cos( m_1 \theta_1 ) - x_2 \sin( m_1 \theta_1 ) \\ x_1 \sin( m_1 \theta_1 ) + x_2 \cos( m_1 \theta_1 ) \\
-x_3 \cos( m_1 \theta_2 ) - x_4 \sin( m_1 \theta_2 ) \\ x_3 \sin( m_1 \theta_2 ) + x_4 \cos( m_1 \theta_2 ) \\
+x_1 \cos( m_1 \theta_1 ) - x_2 \sin( m_1 \theta_1 ) \\ 
+x_1 \sin( m_1 \theta_1 ) + x_2 \cos( m_1 \theta_1 ) \\
+x_3 \cos( m_1 \theta_2 ) - x_4 \sin( m_1 \theta_2 ) \\ 
+x_3 \sin( m_1 \theta_2 ) + x_4 \cos( m_1 \theta_2 ) \\
 \end{bmatrix}
 $$
 
