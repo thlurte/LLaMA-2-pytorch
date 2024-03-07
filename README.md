@@ -32,24 +32,9 @@ Instead of directly adding a positional embedding vector to the word embedding, 
 
 Based on the paper:
 
-$$
-R^d_{\Theta,m}x = 
-\begin{pmatrix}
-x_1 \\ x_2 \\ x_3 \\ x_4 \\ \vdots \\ \vdots \\ \vdots \\ x_{d-1} \\ x_d
-\end{pmatrix} 
-\bigotimes 
-\begin{pmatrix} 
-\cos m\theta_1 \\ \cos m\theta_1 \\ \cos m \theta_2 \\ \cos m \theta_2 \\ \vdots \\ \vdots \\ \vdots \\ \cos m \theta_{d/2} \\ \cos m \theta_{d/2}
-\end{pmatrix}
-+
-\begin{pmatrix} 
--x_2 \\ x_1 \\ -x_4 \\ x_3 \\ \vdots \\ \vdots \\ \vdots \\ -x_d \\ x_{d-1} 
-\end{pmatrix}
-\bigotimes
-\begin{pmatrix}
-\sin m\theta_1 \\ \sin m\theta_1 \\ \sin m \theta_2 \\ \sin m \theta_2 \\ \vdots \\ \vdots \\ \vdots \\ \sin m \theta_{d/2} \\ \sin m \theta_{d/2} 
-\end{pmatrix}
-$$
+<p align="center">
+  <img src="/assets/b.png" alt="Eq">
+</p>
 
 
 where :
