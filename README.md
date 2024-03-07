@@ -35,13 +35,20 @@ Based on the paper:
 $$
 \begin{align}
 R^d_{\Theta,m}x=
-\begin{pmatrix}x_1\\x_2\\x_3\\x_4\\.\\.\\.\\x_{d-1}\\x_d
+\begin{pmatrix}
+x_1 \\ x_2 \\ x_3 \\ x_4 \\ . \\ . \\ . \\ x_{d-1} \\ x_d
 \end{pmatrix} 
 \bigotimes 
-\begin{pmatrix} \cos m\theta_1 \\ \cos m\theta_1 \\ \cos m\theta_2 \\ \cos m\theta_2 \\ .\\.\\.\\\cos m\theta_{d/2}\\ \cos m\theta_{d/2}
+\begin{pmatrix} \cos m\theta_1 \\ \cos m\theta_1 \\ \cos m \theta_2 \\ \cos m \theta_2 \\ . \\ . \\ . \\ \cos m \theta_{d/2} \\ \cos m \theta_{d/2}
 \end{pmatrix}
 +
-\begin{pmatrix}-x_2\\x_1\\-x_4\\x_3\\.\\.\\.\\-x_d\\x_{d-1}\end{pmatrix}\bigotimes\begin{pmatrix}\sin m\theta_1\\ \sin m\theta_1 \\ \sin m\theta_2 \\ \sin m\theta_2\\ . \\ . \\ . \\\sin m\theta_{d/2} \\ \sin m\theta_{d/2} \end{pmatrix}
+\begin{pmatrix} 
+-x_2 \\ x_1 \\ -x_4 \\ x_3 \\ . \\ . \\ . \\ -x_d \\ x_{d-1} 
+\end{pmatrix}
+\bigotimes
+\begin{pmatrix}
+\sin m\theta_1 \\ \sin m \theta_1 \\ \sin m \theta_2 \\ \sin m\theta_2 \\ . \\ . \\ . \\ \sin m \theta_{d/2} \\ \sin m \theta_{d/2} 
+\end{pmatrix}
 \end{align}
 $$
 
@@ -53,7 +60,7 @@ $$
 $$
 
 $$
-m=[1,2,...,\text{seq\_len}]
+m=[1,2,...,seq\_len]
 $$
 
 A slight different way to put this would be, We perform outer product on `m` and $\Theta$  and get a matrix that looks like this 
