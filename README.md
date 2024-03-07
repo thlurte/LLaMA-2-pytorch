@@ -56,7 +56,9 @@ $$
 Then we convert this matrix into complex form
 
 $$
-\Theta \otimes \mathbf{m} = \begin{pmatrix} \cos(m_1 \theta_1) + i\sin(m_1 \theta_1) & \cos(m_2 \theta_1) + i\sin(m_2 \theta_1) & \cdots & \cos(m_{seq\_len} \theta_1) + i\sin(m_{seq\_len} \theta_1) \\ \cos(m_1 \theta_2) + i\sin(m_1 \theta_2) & \cos(m_2 \theta_2) + i\sin(m_2 \theta_2) & \cdots & \cos(m_{seq\_len} \theta_2) + i\sin(m_{seq\_len} \theta_2) \\ \vdots & \vdots & \ddots & \vdots \\ \cos(m_1 \theta_{d/2}) + i\sin(m_1 \theta_{d/2}) & \cos(m_2 \theta_{d/2}) + i\sin(m_2 \theta_{d/2}) & \cdots & \cos(m_{seq\_len} \theta_{d/2}) + i\sin(m_{seq\_len} \theta_{d/2}) \end{pmatrix}
+\Theta \otimes \mathbf{m} = 
+\begin{pmatrix} \cos( m_1 \theta_1 ) + i \sin( m_1 \theta_1 ) & \cos (m_2 \theta_1 ) + i \sin( m_2 \theta_1 ) & \cdots & \cos( m_{seq\_len} \theta_1 ) + i \sin( m_{seq\_len} \theta_1 ) \\ \cos( m_1 \theta_2 ) + i \sin( m_1 \theta_2 ) & \cos( m_2 \theta_2 ) + i \sin( m_2 \theta_2 ) & \cdots & \cos( m_{seq\_len} \theta_2 ) + i \sin( m_{seq\_len} \theta_2 ) \\ \vdots & \vdots & \ddots & \vdots \\ \cos( m_1 \theta_{d/2}) + i \sin( m_1 \theta_{d/2} ) & \cos( m_2 \theta_{d/2} ) + i \sin( m_2 \theta_{d/2} ) & \cdots & \cos( m_{seq\_len} \theta_{d/2} ) + i \sin( m_{seq\_len} \theta_{d/2} ) 
+\end{pmatrix}
 $$
 
 #### Explanation
@@ -73,7 +75,7 @@ We reshape this vector by grouping two successive tokens.
 
 $$
 \begin{bmatrix}
-[x_1 & x_2] \\ \\ [x_3 & x_4]
+[x_1 & x_2] \\  [x_3 & x_4] \\ 
 \end{bmatrix}
 $$
 
@@ -81,7 +83,7 @@ In this matrix, given that we consider the first element, We represent this elem
 
 $$
 \begin{bmatrix}
-x_1+ix_2 \\ \\ x_3 + ix_4
+x_1+ix_2 \\  x_3 + ix_4 \\
 \end{bmatrix}
 $$
 
@@ -101,7 +103,7 @@ $$
 $$
 \begin{bmatrix}
 x_1 \cos( m_1 \theta_1 ) - x_2 \sin( m_1 \theta_1 ) + i ( x_1 \sin( m_1 \theta_1 )+x_2 \cos( m_1 \theta_1 )) \\
-x_3 \cos( m_1 \theta_2 ) - x_4 \sin( m_1 \theta_2 ) + i ( x_3 \sin( m_1 \theta_2 )+ x_4 \cos( m_1 \theta_2 ))
+x_3 \cos( m_1 \theta_2 ) - x_4 \sin( m_1 \theta_2 ) + i ( x_3 \sin( m_1 \theta_2 )+ x_4 \cos( m_1 \theta_2 )) \\
 \end{bmatrix}
 $$
 
@@ -110,16 +112,14 @@ Once computed, now we can split the real and imaginary part and flatten them to 
 $$
 \begin{bmatrix}
 x_1\cos(m_1\theta_1) - x_2\sin(m_1\theta_1) &x_1\sin(m_1\theta_1)+x_2\cos(m_1\theta_1)\\
-
-x_3\cos(m_1\theta_2) - x_4\sin(m_1\theta_2)&x_3\sin(m_1\theta_2)+x_4\cos(m_1\theta_2)
+x_3\cos(m_1\theta_2) - x_4\sin(m_1\theta_2)&x_3\sin(m_1\theta_2)+x_4\cos(m_1\theta_2) \\
 \end{bmatrix}
 $$
 
 $$
 \begin{bmatrix}
-x_1\cos(m_1\theta_1) - x_2\sin(m_1\theta_1) \\x_1\sin(m_1\theta_1)+x_2\cos(m_1\theta_1)\\
-
-x_3\cos(m_1\theta_2) - x_4\sin(m_1\theta_2)\\x_3\sin(m_1\theta_2)+x_4\cos(m_1\theta_2)
+x_1 \cos( m_1 \theta_1 ) - x_2 \sin( m_1 \theta_1 ) \\ x_1 \sin( m_1 \theta_1 ) + x_2 \cos( m_1 \theta_1 ) \\
+x_3 \cos( m_1 \theta_2 ) - x_4 \sin( m_1 \theta_2 ) \\ x_3 \sin( m_1 \theta_2 ) + x_4 \cos( m_1 \theta_2 ) \\
 \end{bmatrix}
 $$
 
