@@ -158,9 +158,74 @@ x_3 \sin( m_1 \theta_2 ) + x_4 \cos( m_1 \theta_2 ) \\
 \end{align}
 $$
 
+## Normalization
+
+In general, due to the nature of deep neural networks,  the distribution of inputs to each layer changes during training as the parameters of the previous layers are updated.[^4] This tends to slow down the training process by making it mandate for us to choose a much lower learning rate.
+
+We tend to address this issue by attempting to stabilize the distribution of layer activations throughout training.
+
+### Batch Normalization
+
+Batch normalization is applied to individual layers. In each training iteration each batch of input is normalized by subtracting their mean ($\mu_{\beta}$) and dividing by their standard deviation $\sigma^2_{\beta}$, where both are estimated based on the statistics of the current batch, and then we apply a scale coefficient ( $\gamma$ ) and an offset ( $\beta$ ) to recover the lost degrees of freedom.[^5][^8]
+
+$$
+\mu_{\beta}=\frac{1}{m}\sum^m_{i=1}x^i
+$$
+
+$$
+\sigma^2_{\beta}=\frac{1}{m}\sum^m_{i=1}(x_i-\mu_{\beta})^2
+$$
+
+$$
+\hat x_i=\frac{x_i-\mu_{\beta}}{\sqrt{\sigma^2_{\beta}+\epsilon}}
+$$
+
+$$
+y_i=\gamma \hat x_i
++\beta
+$$
+
+### Layer Normalization
+
+Instead of computing mean using a distribution of minibtach like we do with batch normalizatiom, we compute mean by averaging over the individual vector within specific layer. [^6][^7]
+
+
+$$
+\mu^l=\frac{1}{H}\sum^H_{i=1}a^l_i
+$$
+
+$$
+\sigma^l=\sqrt{\frac{1}{H}\sum^H_{i=1}(a^l_i-u^l)^2}
+$$
+
+$$
+y^l = \gamma^l \cdot \frac{a^l - \mu}{\sqrt{\sigma^2 + \epsilon}} + \beta^l
+$$
+
+### Root Mean Square Layer Normalization
+
+What RMS proposes is that re-scaling is alone sufficient to help model converge faster, thus resulting in a more simplified method.[^9]
+
+$$
+\bar a_i=\frac{a_i}{RMS(a)}g_i,
+$$
+
+where:
+
+$$
+RMS(a)=\sqrt{\frac{1}{n}\sum^n_{i=1}a^2_i}
+$$
+
+
+
+
 
 [^1]:H. Touvron _et al._, “Llama 2: Open Foundation and Fine-Tuned Chat Models.” arXiv, Jul. 19, 2023. Available: [http://arxiv.org/abs/2307.09288](http://arxiv.org/abs/2307.09288). [Accessed: Mar. 02, 2024]
-
 [^2]:P. Dufter, M. Schmitt, and H. Schütze, “Position Information in Transformers: An Overview,” _Computational Linguistics_, vol. 48, no. 3, pp. 733–763, Sep. 2022, doi: [10.1162/coli_a_00445](https://doi.org/10.1162/coli_a_00445)
-
 [^3]:J. Su, Y. Lu, S. Pan, A. Murtadha, B. Wen, and Y. Liu, “RoFormer: Enhanced Transformer with Rotary Position Embedding.” arXiv, Nov. 08, 2023. Available: [http://arxiv.org/abs/2104.09864](http://arxiv.org/abs/2104.09864). [Accessed: Mar. 03, 2024]
+[^4]: S. Ioffe and C. Szegedy, “Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift.” arXiv, Mar. 02, 2015. doi: [10.48550/arXiv.1502.03167](https://doi.org/10.48550/arXiv.1502.03167). Available: [http://arxiv.org/abs/1502.03167](http://arxiv.org/abs/1502.03167). [Accessed: Mar. 08, 2024]
+[^5]:“8.5. Batch Normalization — Dive into Deep Learning 1.0.3 documentation.” Available: [https://d2l.ai/chapter_convolutional-modern/batch-norm.html#batch-normalization](https://d2l.ai/chapter_convolutional-modern/batch-norm.html#batch-normalization). [Accessed: Mar. 08, 2024]
+[^6]:J. L. Ba, J. R. Kiros, and G. E. Hinton, “Layer Normalization,” _arXiv.org_, Jul. 21, 2016. Available: [https://arxiv.org/abs/1607.06450v1](https://arxiv.org/abs/1607.06450v1). [Accessed: Mar. 08, 2024]
+[^7]:_Layer Normalization | Lecture 63 (Part 2) | Applied Deep Learning_, (May 07, 2021). Available: [https://www.youtube.com/watch?v=eyPZ9Mrhri4](https://www.youtube.com/watch?v=eyPZ9Mrhri4). [Accessed: Mar. 08, 2024]
+[^8]:“Normalizing Activations in a Network (C2W3L04) - YouTube.” Available: [https://www.youtube.com/watch?v=tNIpEZLv_eg&list=PLkDaE6sCZn6Hn0vK8co82zjQtt3T2Nkqc&index=28&t=159s](https://www.youtube.com/watch?v=tNIpEZLv_eg&list=PLkDaE6sCZn6Hn0vK8co82zjQtt3T2Nkqc&index=28&t=159s). [Accessed: Mar. 08, 2024]
+[^9]:B. Zhang and R. Sennrich, “Root Mean Square Layer Normalization,” _arXiv.org_, Oct. 16, 2019. Available: [https://arxiv.org/abs/1910.07467v1](https://arxiv.org/abs/1910.07467v1). [Accessed: Mar. 08, 2024]

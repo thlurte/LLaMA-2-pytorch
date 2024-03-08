@@ -67,6 +67,23 @@ def apply_rotary_embeddings(x:torch.tensor, freqs_complex: torch.tensor, device:
     x_out=x_out.reshape(*x.shape)
     return x_out.type_as(x).to(device)
 
+
+class RMSNorm(nn.Module):
+    def __init__(self, dim:int, eps: float=1e-6) -> None:
+        super().__init__()
+        self.eps=eps
+        # gamma parameter
+        self.weight=nn.Parameter(torch.ones(dim))
+
+    def _norm(self, x: torch.Tensor):
+        # (B, seq_len, dim)
+        return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True)+self.eps)
+    
+    def forward(self,x:torch.Tensor):
+        # (dim) * (B, seq_len, dim) -> (B, seq_len, dim)
+        return self.weight * self._norm(x.float()).type_as(x)
+
+
 # ----------------   Transformer   ---------------- #
     
 class Transformer(nn.Module):
