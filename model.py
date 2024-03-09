@@ -67,7 +67,33 @@ def apply_rotary_embeddings(x:torch.tensor, freqs_complex: torch.tensor, device:
     x_out=x_out.reshape(*x.shape)
     return x_out.type_as(x).to(device)
 
+# ----------------  Encoder Block  ---------------- #
 
+class EncoderBlock(nn.Module):
+    def __init__(self,args:ModelArgs) -> None:
+        super().__init__()
+        self.n_heads=args.n_heads
+        self.dim=args.dim
+        self.head_dim=args.dim//args.n_heads
+
+        self.attention=SelfAttention(args)
+        self.feed_forward=FeedForward(args)
+
+        # Normalization before self-attention 
+        self.attention=RMSNorm(args.dim, eps=args.norm_eps)
+        # Normalization attention 
+        self.ffn_norm=RMSNorm(args.dim,eps=args.norm_eps)
+
+    def forward(self, x:torch.Tensor, start_pos:int, freq_complex:torch.Tensor):
+        # (B, seq_len, dim)  + (B, seq_len, dim) --> (B, seq_len, dim) 
+        h=x+self.attention.forward(self.attention_nom(x),start_pos,freq_complex) 
+        out=h+self.feed_forward.forward(self.ffn_norm(h))
+        return out 
+
+
+# ------------------------------------------------- #
+
+# ----------------     RMSNorm     ---------------- #
 class RMSNorm(nn.Module):
     def __init__(self, dim:int, eps: float=1e-6) -> None:
         super().__init__()
@@ -83,6 +109,7 @@ class RMSNorm(nn.Module):
         # (dim) * (B, seq_len, dim) -> (B, seq_len, dim)
         return self.weight * self._norm(x.float()).type_as(x)
 
+# ------------------------------------------------- #
 
 # ----------------   Transformer   ---------------- #
     
